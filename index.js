@@ -23,8 +23,13 @@ const hoursToShow = 24;
 for (let i = 0; i < Math.min(hoursToShow, timeseriesFuture.length); i++) {
     const item = timeseriesFuture[i];
     const time = item.time;
-    const temp = item.data.instant.details.air_temperature;
-    console.log(`${time} ${temp}C`);
+
+    // Kontrollime, kas next_1_hours olemas, muidu paneme '-'
+    const symbol = item.data.next_1_hours
+        ? item.data.next_1_hours.summary.symbol_code
+        : "-";
+    
+    console.log(`${time} ${symbol}`);
 }
 
 })
