@@ -1,4 +1,4 @@
-// Toome sisse axios teegi
+
 const axios = require("axios");
 
 // Tallinna koordinaadid Latitude: 59.4370 Longitude: 24.7536.
@@ -14,13 +14,19 @@ axios.get(url, {
   // Võtame JSON-ist timeseries massiivi
   const timeseries = response.data.properties.timeseries;
 
-  // Käime läbi esimesed 5 kirjet
-  for (let i = 0; i < 5; i++) {
-    const item = timeseries[i];
+// Võta ainult need kirjed, mis on praegusest ajast edasi
+const now = new Date();
+const timeseriesFuture = timeseries.filter(item => new Date(item.time) >= now);
+
+// Näita järgmised 24 tundi
+const hoursToShow = 24;
+for (let i = 0; i < Math.min(hoursToShow, timeseriesFuture.length); i++) {
+    const item = timeseriesFuture[i];
     const time = item.time;
     const temp = item.data.instant.details.air_temperature;
     console.log(`${time} ${temp}C`);
-  }
+}
+
 })
 .catch(error => {
   console.error("Viga päringus:", error.message);
